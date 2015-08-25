@@ -36,10 +36,12 @@ def read_images(path, sz=None):
             img = cv2.resize(img, sz)
           X.append(np.asarray(img, dtype=np.uint8))
           y.append(c)
-        except IOError, (errno, strerror):
-          print "IOError({0}): {1}".format(errno, strerror)
+        except IOError as ioErr:
+          print( "IOError({0}): {1}", ioErr )
+#        except IOError as (errno, strerror):
+#          print( "IOError({0}): {1}".format(errno, strerror) )
         except:
-          print "Unexpected error:" , sys.exc_info()[0]
+          print( "Unexpected error:" , sys.exc_info()[0] )
           raise
       c += 1
   return [X,y]
@@ -48,8 +50,8 @@ def read_images(path, sz=None):
 class FaceRecognizer(BaseEstimator):
   def __init__(self):
     #self.model = model
-    #self.model = cv2.createFisherFaceRecognizer()
-    self.model = cv2.createEigenFaceRecognizer()
+    #self.model = cv2.face.createFisherFaceRecognizer()
+    self.model = cv2.face.createEigenFaceRecognizer()
 
   def fit(self, X, y):
     self.model.train(X, y)
@@ -67,7 +69,7 @@ if __name__ == "__main__":
   estimator = FaceRecognizer()
 
   precision_scores = cval.cross_val_score(estimator, X, y, score_func=precision_score, cv=cv)
-  print precision_scores
-  print sum(precision_scores)/len(precision_scores)
+  print( precision_scores )
+  print( sum(precision_scores)/len(precision_scores) )
 
 
